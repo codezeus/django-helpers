@@ -16,6 +16,7 @@ setup(
     include_package_data=True,
     license='MIT License',
     description='A set of helper functions and utilities for a Django application',
+    download_url = 'https://github.com/codezeus/django-toolset/tarball/0.1.3',
     long_description=README,
     url='https://github.com/codezeus/django-toolset',
     author='Dan Sackett',
@@ -32,6 +33,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content'
     ],
 )
