@@ -1,5 +1,5 @@
 import pytest
-import mock
+from mock import Mock
 
 from django.template import Template, Context
 
@@ -7,7 +7,7 @@ class DescribeMethodFilter:
     """Tests for the `method` filter"""
     @classmethod
     def setup_class(cls):
-        cls.request = mock.Mock()
+        cls.request = Mock()
         cls.template = Template('''
             {% load custom_filters %}
             {{ test|method:"test_method" }}
@@ -20,7 +20,7 @@ class DescribeMethodFilter:
 
         context = Context({ 'test': Test() })
         template = self.template.render(context)
-        assert 'bound method Test.test_method' in template
+        assert 'Test.test_method' in template
 
     def it_recognizes_not_callable(self):
         class Test:
@@ -34,7 +34,7 @@ class DescribeWithFilter:
     """Tests for the `with` filter"""
     @classmethod
     def setup_class(cls):
-        cls.request = mock.Mock()
+        cls.request = Mock()
         cls.template = Template('''
             {% load custom_filters %}
             {{ test|method:"test_method"|with:my_string }}
@@ -62,7 +62,7 @@ class DescribeCallFilter:
     """Tests for the `call` filter"""
     @classmethod
     def setup_class(cls):
-        cls.request = mock.Mock()
+        cls.request = Mock()
         cls.template = Template('''
             {% load custom_filters %}
             {{ test|method:"test_method"|call }}

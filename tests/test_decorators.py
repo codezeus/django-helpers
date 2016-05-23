@@ -1,14 +1,14 @@
 import pytest
-import mock
+from mock import Mock, MagicMock
 
 from django_toolset.decorators import authenticated_redirect
 
-@pytest.mark.urls('utils.tests.test_urls')
+@pytest.mark.urls('tests.testapp.urls')
 class DescribeAuthenticatedRedirect:
     """Test the authenticated_redirect decorator"""
     @classmethod
     def setup_class(cls):
-        cls.request = mock.Mock()
+        cls.request = Mock()
         cls.request.path = '/login/'
 
     def it_works_without_kwargs(self):
@@ -16,7 +16,7 @@ class DescribeAuthenticatedRedirect:
         def my_function(request):
             return True
 
-        self.request.user.is_authenticated = mock.MagicMock(return_value=True)
+        self.request.user.is_authenticated = MagicMock(return_value=True)
         result = my_function(self.request)
         assert result.url == '/dashboard/'
 
@@ -25,7 +25,7 @@ class DescribeAuthenticatedRedirect:
         def my_function(request):
             return True
 
-        self.request.user.is_authenticated = mock.MagicMock(return_value=True)
+        self.request.user.is_authenticated = MagicMock(return_value=True)
         result = my_function(self.request)
         assert result.url == '/'
 
@@ -34,7 +34,7 @@ class DescribeAuthenticatedRedirect:
         def my_function(request):
             return True
 
-        self.request.user.is_authenticated = mock.MagicMock(return_value=False)
+        self.request.user.is_authenticated = MagicMock(return_value=False)
         result = my_function(self.request)
         assert result is True
 
@@ -43,6 +43,6 @@ class DescribeAuthenticatedRedirect:
         def my_function(request):
             return True
 
-        self.request.user.is_authenticated = mock.MagicMock(return_value=True)
+        self.request.user.is_authenticated = MagicMock(return_value=True)
         result = my_function(self.request)
         assert result.url == '/dashboard/'

@@ -17,10 +17,21 @@ def active(context, pattern_or_urlname, class_name='active'):
     Usage:
 
         {% load custom_tags %}
-        <nav><ul>
-          <li class="nav-home {% active 'url-name' %}"><a href="#">Home</a></li>
-          <li class="nav-blog {% active '^/regex/' %}"><a href="#">Blog</a></li>
-        </ul></nav>
+        <nav>
+          <ul>
+            <li class="nav-home {% active 'url-name' %}"><a href="#">Home</a></li>
+            <li class="nav-blog {% active '^/regex/' %}"><a href="#">Blog</a></li>
+          </ul>
+        </nav>
+
+        or
+
+        <nav>
+          <ul>
+            <li class="nav-home {% active 'url-name' class_name='current' %}"><a href="#">Home</a></li>
+            <li class="nav-blog {% active '^/regex/' class_name='current' %}"><a href="#">Blog</a></li>
+          </ul>
+        </nav>
 
     """
     request = context.dicts[1].get('request')

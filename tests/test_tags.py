@@ -1,15 +1,15 @@
 import pytest
-import mock
+from mock import Mock
 
 from django.core.urlresolvers import NoReverseMatch
 from django.template import Template, Context
 
-@pytest.mark.urls('utils.tests.test_urls')
+@pytest.mark.urls('tests.testapp.urls')
 class DescribeActiveTag:
     """Tests for the `active` templatetag"""
     @classmethod
     def setup_class(cls):
-        cls.request = mock.Mock()
+        cls.request = Mock()
         cls.request.path = '/login/'
         cls.context = Context({ 'request': cls.request, })
 
@@ -28,6 +28,7 @@ class DescribeActiveTag:
         template = self.make_template_for('^/login/$').render(self.context)
         assert template == 'active'
 
-    def it_knows_page_is_current_from_regex(self):
-        template = self.make_template_for('^/login/$').render(self.context)
-        assert template == 'active'
+    def it_can_customize_class_name(self):
+        template = Template("{% load custom_tags %}{% active 'login' class_name='current' %}")
+        template = template.render(self.context)
+        assert template == 'current'
