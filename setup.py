@@ -44,7 +44,7 @@ setup(
     include_package_data=True,
     license='MIT License',
     description='A set of helper functions and utilities for a Django application',
-    download_url = 'https://github.com/codezeus/django-toolset/tarball/0.1.3',
+    download_url = 'https://github.com/codezeus/django-toolset/tarball/0.1.4',
     long_description=README,
     cmdclass=cmdclasses,
     url='https://github.com/codezeus/django-toolset',
