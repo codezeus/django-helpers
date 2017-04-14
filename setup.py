@@ -1,61 +1,72 @@
-import os, sys
-from setuptools import find_packages, setup
+#!/usr/bin/env python
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
-    README = readme.read()
+import os
+import re
+import sys
 
-try:
-    from setuptools.command.test import test as TestCommand
+from codecs import open
 
-    class PyTest(TestCommand):
-        user_options = [('pytest-args=', 'a', "Arguments to pass into py.test")]
+from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
-        def initialize_options(self):
-            TestCommand.initialize_options(self)
-            self.pytest_args = []
+with open('django_toolset/__init__.py', 'r') as fd:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                        fd.read(), re.MULTILINE).group(1)
+if sys.argv[-1] == 'tag':
+    os.system("git tag -a %s -m 'version %s'" % (version, version))
+    os.system("git push --tags")
+    sys.exit()
 
-        def finalize_options(self):
-            TestCommand.finalize_options(self)
-            self.test_args = []
-            self.test_suite = True
+if sys.argv[-1] == 'publish':
+    os.system("python setup.py sdist upload")
+    os.system("python setup.py bdist_wheel upload")
+    sys.exit()
 
-        def run_tests(self):
-            import pytest
+class PyTest(TestCommand):
 
-            errno = pytest.main(self.pytest_args)
-            sys.exit(errno)
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = []
 
-except ImportError:
-    PyTest = None
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
 
-cmdclasses = {}
-if PyTest:
-    cmdclasses['test'] = PyTest
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.pytest_args)
+        sys.exit(errno)
 
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+tests_require = ['Django', 'pytest', 'pytest-cov', 'coverage', 'mock'],
 
-version = __import__('django_toolset').__version__
+if not version:
+    raise RuntimeError('Cannot find version information')
+
+with open('README.rst', 'r', 'utf-8') as f:
+    readme = f.read()
 
 setup(
     name='django-toolset',
     version=version,
-    packages=find_packages(),
+    description='Python user input prompt toolkit',
+    long_description=readme,
+    author='Dan Sackett',
+    author_email='danesackett@gmail.com',
+    url='https://github.com/dansackett/django-toolset',
+    packages=['django_toolset'],
+    package_data={'': ['LICENSE']},
+    package_dir={'django_toolset': 'django_toolset'},
     include_package_data=True,
-    license='MIT License',
-    description='A set of helper functions and utilities for a Django application',
-    download_url = 'https://github.com/codezeus/django-toolset/tarball/0.1.4',
-    long_description=README,
-    cmdclass=cmdclasses,
-    url='https://github.com/codezeus/django-toolset',
-    author='CodeZeus',
-    maintainer='Dan Sackett',
-    maintainer_email='danesackett@gmail.com',
-    tests_require=['Django', 'pytest', 'pytest-cov', 'coverage', 'mock'],
+    tests_require=tests_require,
+    cmdclass={'test': PyTest},
+    license='MIT',
+    zip_safe=False,
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.11',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
@@ -63,5 +74,5 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Topic :: Utilities',
-    ],
+    ]
 )
