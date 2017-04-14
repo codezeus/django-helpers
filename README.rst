@@ -43,7 +43,7 @@ You can get Django Toolset by using pip::
 
 If you want to install it from source, grab the git repository from GitHub and run setup.py::
 
-    $ git clone git://github.com/codezeus/django-toolset.git
+    $ git clone git://github.com/dansackett/django-toolset.git
     $ cd django-toolset
     $ python setup.py install
 
